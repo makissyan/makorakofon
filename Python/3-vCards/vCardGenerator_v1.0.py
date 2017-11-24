@@ -8,20 +8,41 @@ def ifInt(variableToCheck):
         return False
 
 counter = 1
+quantityParametr = 0
+isPhotoParametr = False
+
+print len (sys.argv)
+while (counter <= 2) :
+
+	if (ifInt(sys.argv[counter])) & (quantityParametr == 0) :		
+		quantityParametr = abs(int(sys.argv[counter]))
+		counter +=1	
+
+	else :
+		if (str(sys.argv[counter]).lower() == "true") :
+			isPhotoParametr = True
+			print "Photo parametr is " + str(isPhotoParametr).upper()
+			counter +=1
+		else :
+			if (counter == int (len (sys.argv))) & (quantityParametr < 0) :
+				print "Quantity parametr couldn't be read, default value will be used instead..."
+				counter += 1
+			else :
+				if (counter == len (sys.argv)) & (isPhotoParametr == False) :
+					print "Photo parametr couldn't be read, default value will be used instead..."
+					counter += 1
+				else :
+					counter += 1
+
+print "QUANTITY: " + str(quantityParametr)	
+print "isPhotoParametr: " + str(isPhotoParametr)
+'''	
 while (counter < len (sys.argv)) & (counter < 3) :
-	if (ifInt(sys.argv[counter])) :
-		quantity = sys.argv[counter]
-		print "the quantity is" + str(quantity)
-		counter += 1
-			
-	elif (str(sys.argv[counter]).lower() == "true") :
-		isPhoto = True
-		print "Photo parametr is" + str(isPhoto)
-		counter += 1
-			
+				
 	else:
-		print "couldn't read " + str(counter) + " parametr."
+		print "Incorrect format of " + str(counter) + " parametr... Default will be using instead."
 		counter += 1
+'''		
 '''
 if (len (sys.argv) == 2) :
 	if ifInt(str(sys.argv[1])) :
