@@ -1,27 +1,3 @@
-import sys
-
-def ifInt(variableToCheck):
-    try: 
-        int(variableToCheck)
-        return True
-    except ValueError:
-        return False
-
-counter = 1
-while (counter < len (sys.argv)) & (counter < 3) :
-	if (ifInt(sys.argv[counter])) :
-		quantity = sys.argv[counter]
-		print "the quantity is" + str(quantity)
-		counter += 1
-			
-	elif (str(sys.argv[counter]).lower() == "true") :
-		isPhoto = True
-		print "Photo parametr is" + str(isPhoto)
-		counter += 1
-			
-	else:
-		print "couldn't read " + str(counter) + " parametr."
-		counter += 1
 '''
 if (len (sys.argv) == 2) :
 	if ifInt(str(sys.argv[1])) :
@@ -54,5 +30,17 @@ if (len (sys.argv) > 3) :
 	print "Please use a correct quantity of arguments..."
 #BEFORE GENERATING - CHECK IF QUANTITY > 0 !!!
 '''
-file = open("generatedContacts.vcf", "w")
-file.close() 
+
+
+while (counter <= len (sys.argv) or (counter < 4)) :
+	
+	if (ifInt(sys.argv[counter])) & (quantityParametr == 0) :		
+		quantityParametr = abs(int(sys.argv[counter]))
+			
+	else :
+		if (str(sys.argv[counter]).lower() == "true") :
+			isPhotoParametr = True
+			
+		else :
+			break
+	print "\n"+str(counter)
