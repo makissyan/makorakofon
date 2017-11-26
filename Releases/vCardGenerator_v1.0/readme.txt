@@ -19,7 +19,7 @@ Developer:
 	Maksym Melanchenko
 ################################################################################################
 Git Repository:	
-	https://github.com/makissyan/makorakofon
+	https://github.com/makissyan/makorakofon/tree/master/Releases
 ################################################################################################
 Date:
 	24.11.2017
