@@ -1,0 +1,8 @@
+print ("This is test input ...")
+print ("\n1DofdevI5e device")
+print ("\n1DofdevI5e unauthorized")
+print ("\n1DofdevI5e2w device")
+print ("\n1DofdevI5e-minusok unauthorized")
+print ("\n1DofdevI5e3r device")
+print ("\n1DofdevI5e-minusok_rabotaet unauthorized")
+print ("\n1DofdevI5e4g device")
