@@ -6,7 +6,7 @@ KNOWN_PHONES = ['CB5A27NUU4','10160ad8efee3403','0915f983de722d01','05445efb0a5c
 '02b6f328d0236113','079ec7be00d355d8','32045110369281ad','ce0716079de52a1702','11160be17a933201','W3D7N15616010803','4790c0ccaeaa10fe']
 
 PATH = "D:\\TestApplicationPhone.properties"
-
+PHONES_SEARCH_EXPRESSION = re.compile("phone.\d")
 STRINGS_RANGE = [13, 88]
 
 actualPhones = []
@@ -22,7 +22,7 @@ for x in range (0, len(elements)) :
 		if elements[x+1] == 'device' :
 			actualPhones.insert(x, elements[x])
 		else :
-			errorPhones.insert(x, elements[x])
+			errorPhones.insert(x, elements[x])			
 
 print "\tPhones found ({}): ".format(len(actualPhones))
 for x in range (0, len(actualPhones)) :
@@ -32,17 +32,27 @@ print "\n\tPhones with error ({}):".format(len(errorPhones))
 for x in range (0, len(errorPhones)) :
 	print "\t\t- " + str(errorPhones[x])
 
+#to check if file exists
+#to check if actual phones !=0
+
 propertiesFile = open(PATH, "r")
 wholeFile = propertiesFile.readlines()
-#configLines = wholeFile [STRINGS_RANGE[0]:STRINGS_RANGE[1]]
-print "\nSearching for phones in config file...\n" 
+propertiesFile.close()
 
+for x in range (0, len(wholeFile)) :
+	uncommentedPhones = PHONES_SEARCH_EXPRESSION.match(wholeFile[x])
+	if str(uncommentedPhones).lower() != "none" :	
+		wholeFile[x] = "#" + wholeFile[x]
+
+print "\nSearching for phones in config file...\n" 
 for x in range (0, len(actualPhones)) :
-	for y in range(0,len(wholeFile)):
+	for y in range(0,len(wholeFile)) :
 		searchResult = re.search(actualPhones[x], wholeFile[y])
 		if str(searchResult).lower() != "none" :	
-			print "\tPhone " + str(actualPhones[x]) + " found on line " + str(y+1) 
+			print "\tPhone " + str(actualPhones[x]) + "with number " + str(x+1) + " found on line " + str(y+1)
+			for z in range (0,3) :
+				wholeFile[y] = "phone." + str(x+1) + wholeFile[y][8:]
+				y += 1
 
-#	if actualPhones[x] in configLines : 
-
-
+propertiesFile = open(PATH, "w")
+propertiesFile.writelines(wholeFile)
