@@ -2,6 +2,14 @@ import sys
 import subprocess
 import string
 import re
+import platform
+
+#WINDOWS PATH:
+WINDOWS = "D:\\TestApplicationPhone.properties"
+#LINUX PATH:
+LINUX = "/home/maksym/project/TestController/resources/TestApplicationPhone.properties"
+
+OS = str(platform.system())
 
 def listDisplay(string, list) :
 	print "\t" + string + "({}): ".format(len(list))
@@ -10,24 +18,20 @@ def listDisplay(string, list) :
 		if (x == len(list) -1) :
 			print "\n"
 
-def sortByPriority(fullReadyPhonesList, listToBeSortBy, string) :
+def sortByPriority(fullReadyPhonesList, listToBeSortBy, phoneName) :
 	for x in range (0, len(fullReadyPhonesList)) :
 		if fullReadyPhonesList[x] in listToBeSortBy :
 			fullReadyPhonesList.insert(0, fullReadyPhonesList.pop(x))
-			print "{} phone has been set on 1st place\n".format(string)
+			print "{} phone has been set on 1st place\n".format(phoneName.upper())
 			break
 		elif (x == len(fullReadyPhonesList) - 1) :
-			print "{} phone couldn't be found in list of connected devices...\n".format(string)
+			print "{} phone couldn't be found in list of connected devices...\n".format(phoneName.upper())
 
 KNOWN_PHONES = ['CB5A27NUU4','10160ad8efee3403','0915f983de722d01','05445efb0a5cb40f','09a7ad48029a8b12','05535d970a5cab52','069a23bb344b6eaa',
 '02b6f328d0236113','079ec7be00d355d8','32045110369281ad','ce0716079de52a1702','11160be17a933201','W3D7N15616010803','4790c0ccaeaa10fe']
 NEXUS_PHONES = ['05445efb0a5cb40f','09a7ad48029a8b12','05535d970a5cab52','069a23bb344b6eaa','02b6f328d0236113','079ec7be00d355d8']
 SAMSUNG_PHONES = ['10160ad8efee3403','0915f983de722d01','32045110369281ad','11160be17a933201','4790c0ccaeaa10fe']
 
-#Windows PATH:
-PATH = "D:\\TestApplicationPhone.properties"
-#Linux PATH:
-#PATH = "/home/maksym/project/TestController/resources/TestApplicationPhone.properties"
 
 PHONES_SEARCH_EXPRESSION = re.compile("phone.\d")
 
@@ -36,18 +40,22 @@ errorPhones = []
 nexusPriority = False
 samsungPriority = False
 
+if (OS.lower() == "windows") :
+	PATH = WINDOWS
+elif (OS.lower() == "linux") :
+	PATH = LINUX
+
 for x in range (0,len(sys.argv)) :
 	if (str(sys.argv[x]).lower() == "samsung") :
 		samsungPriority = True
-		print "\nSamsung priority has been accepted..."
+		print "\n" + str(sys.argv[x]).upper() + " priority has been accepted..."
 		break
 	elif (str(sys.argv[x]).lower() == "nexus") :
 		nexusPriority = True
-		print "\nNexus priority has been accepted..."
+		print "\n" + str(sys.argv[x]).upper() + " priority has been accepted..."
 		break	
 
 print "\nRunning 'adb devices'...\n"
-#comResult = (subprocess.check_output(["adb devices"],shell=True)).decode("utf-8")
 comResult = (subprocess.check_output(["testInput.py"],shell=True)).decode("utf-8")
 modifStr = comResult.replace("\r", ",").replace(" ", ",").replace("\n", ",").replace("\t", ",")
 elements = modifStr.split(',')
@@ -96,4 +104,4 @@ try :
 	print "Config file has been succesfully updated."
 
 except IOError :
-	print "\nConfig file couldn't be opened. Check PATH variable."	
+	print "\nConfig file couldn't be opened. Check path for {} variable.".format(OS.upper())
