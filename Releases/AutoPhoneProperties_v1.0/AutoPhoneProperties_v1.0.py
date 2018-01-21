@@ -70,7 +70,7 @@ for x in range (0,len(sys.argv)) :
 
 #Running external command 'adb devices' and converting output to utf-8 string.
 print "\nRunning 'adb devices'...\n"
-comResult = (subprocess.check_output(["testInput.py"],shell=True)).decode("utf-8")
+comResult = (subprocess.check_output(["adb devices"],shell=True)).decode("utf-8")
 
 #Splitting string to a list by elements.
 modifStr = comResult.replace("\r", ",").replace(" ", ",").replace("\n", ",").replace("\t", ",")
