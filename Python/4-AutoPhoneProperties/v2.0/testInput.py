@@ -1,0 +1,6 @@
+print ("This is test input ...")
+print ("\n0915f983de722d01 device")
+print ("\nCB5A27NUU4 device")
+print ("\n079ec7be00d355d8 unauthorized")
+print ("\n10160ad8efee3403 offline")
+print ("\n32045110369281ad device")
