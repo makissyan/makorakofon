@@ -45,11 +45,11 @@ actualPhones = []
 errorPhones = []
 
 
-#Checking of given parameters for priority pointer and path.
+#Checking of given parameters for path and priority pointer.
 parser = argparse.ArgumentParser(description = "Runs 'adb devices' and updates TestApplicationPhone.properties file with actual phone status.")
-parser.add_argument("path", action='store')
-parser.add_argument ("-n", "--nexus", dest = "nexusPriority", action = 'store_true')
-parser.add_argument ("-s", "--samsung", dest = "samsungPriority", action = 'store_true')
+parser.add_argument("path", action="store", help = "Obligatory argument for setting path.")
+parser.add_argument ("-n", "--nexus", dest = "nexusPriority", action = 'store_true', help = "Sets priority for NEXUS phone.")
+parser.add_argument ("-s", "--samsung", dest = "samsungPriority", action = 'store_true', help = "Sets priority for SAMSUNG phone.")
 args = parser.parse_args()
 
 #Checking if path is valid and can be read
@@ -67,7 +67,7 @@ except IOError :
 #Running external command 'adb devices' and converting output to utf-8 string.
 print "\nRunning 'adb devices'...\n"
 #comResult = (subprocess.check_output(["adb devices"],shell=True)).decode("utf-8")
-comResult = (subprocess.check_output(["python testInput.py"],shell=True)).decode("utf-8")
+comResult = (subprocess.check_output(["testInput.py"],shell=True)).decode("utf-8")
 
 #Splitting string to a list by elements.
 modifStr = re.sub(r'\s',',', comResult)
