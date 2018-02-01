@@ -7,23 +7,24 @@ import argparse
 
 #listDisplay() - function for displaying lists. 
 #Receives 2 parameters: string (text which should be displayed before list), list which should be displayed. 
-def listDisplay(string, list) :
-	print "\t" + string + "({}): ".format(len(list))
-	for x in range (0, len(list)) :
-		print "\t\t- " + str(list[x])
-		if (x == len(list) -1) :
+def listDisplay(header, listToDisplay) :
+	print "\t {} ({}): ".format(header, len(listToDisplay))
+	for index, element in enumerate(listToDisplay) :
+		print "\t\t- {}".format(element)
+		if (index == len(listToDisplay) -1) :
 			print "\n"
+	
 
 #sortByPriority() - function for lists sorting by other list elements. Currently configured for shifting 1st found element to 1st place in list. 
 #Receives 3 parameters: List which should be sorted, list with elements which will be taken as sorting criteria, string with a phone name.
 def sortByPriority(fullReadyPhonesList, listToBeSortBy, phoneName) :
 	print "{} priority has been accepted...".format(phoneName.upper())
-	for x in range (0, len(fullReadyPhonesList)) :
-		if fullReadyPhonesList[x] in listToBeSortBy :
-			fullReadyPhonesList.insert(0, fullReadyPhonesList.pop(x))
+	for index, phone in enumerate(fullReadyPhonesList) :
+		if phone in listToBeSortBy :
+			fullReadyPhonesList.insert(0, fullReadyPhonesList.pop(index))
 			print "{} phone has been set on 1st place\n".format(phoneName.upper())
 			break
-		elif (x == len(fullReadyPhonesList) - 1) :
+		elif (index == len(fullReadyPhonesList) - 1) :
 			print "{} phone couldn't be found in list of connected devices...\n".format(phoneName.upper())
 
 #List of all known phones.
@@ -37,6 +38,7 @@ SAMSUNG_PHONES = ['10160ad8efee3403','0915f983de722d01','32045110369281ad','1116
 #Regular expression for searching phone.* string.
 PHONES_SEARCH_EXPRESSION = re.compile("phone.\d")
 
+
 #Variable to store list of all connected and ready phones.
 actualPhones = []
 #Variable to store list of all connected, but not ready phones.
@@ -45,15 +47,15 @@ errorPhones = []
 
 #Checking of given parameters for priority pointer and path.
 parser = argparse.ArgumentParser(description = "Runs 'adb devices' and updates TestApplicationPhone.properties file with actual phone status.")
+parser.add_argument("path", action='store')
 parser.add_argument ("-n", "--nexus", dest = "nexusPriority", action = 'store_true')
 parser.add_argument ("-s", "--samsung", dest = "samsungPriority", action = 'store_true')
-parser.add_argument("path", action='store')
 args = parser.parse_args()
 
 #Checking if path is valid and can be read
 try :
 	
-		propertiesFile = open(args.path, "r")
+		propertiesFile = open(args.path, "r")		
 		#Reading from TestApplicationPhone.properties by lines.
 		wholeFile = propertiesFile.readlines()
 		propertiesFile.close()
@@ -62,24 +64,24 @@ except IOError :
 	print "\nConfig file couldn't be opened. Check the path..."
 	sys.exit(0)
 
-
 #Running external command 'adb devices' and converting output to utf-8 string.
 print "\nRunning 'adb devices'...\n"
-comResult = (subprocess.check_output(["adb devices"],shell=True)).decode("utf-8")
+#comResult = (subprocess.check_output(["adb devices"],shell=True)).decode("utf-8")
+comResult = (subprocess.check_output(["python testInput.py"],shell=True)).decode("utf-8")
 
 #Splitting string to a list by elements.
-modifStr = comResult.replace("\r", ",").replace(" ", ",").replace("\n", ",").replace("\t", ",")
+modifStr = re.sub(r'\s',',', comResult)
 elements = modifStr.split(',')
 
 #Checking if list contains known phones.
-for x in range (0, len(elements)) :
-	if elements[x] in KNOWN_PHONES :
+for index, phone in enumerate(elements) :
+	if phone in KNOWN_PHONES :
 		#If device is ready to use - adding phone to actualPhones list.
-		if elements[x+1] == 'device' :
-			actualPhones.insert(x, elements[x])
+		if elements[index+1] == 'device' :
+			actualPhones.insert(index, phone)
 		#If device is not ready to use - adding phone and reason to errorPhones list.
 		else :
-			errorPhones.insert(x, elements[x] + " - " + elements[x+1])
+			errorPhones.insert(index, phone + " - " + elements[index+1])
 
 #Sorting of phones according to setted priority.
 if (args.nexusPriority == True) :
@@ -95,21 +97,21 @@ if (errorPhones > []) :
 	listDisplay("Phones with error: ", errorPhones)
 
 #Commenting all phones.
-for x in range (0, len(wholeFile)) :
-	uncommentedPhones = PHONES_SEARCH_EXPRESSION.match(wholeFile[x])
+for index, currentString in enumerate(wholeFile) :
+	uncommentedPhones = PHONES_SEARCH_EXPRESSION.match(str(currentString))
 	if str(uncommentedPhones).lower() != "none" :	
-		wholeFile[x] = "#" + wholeFile[x]
+		wholeFile[index] = "#" + currentString
 
 #Checking if connected phones are ready.
 if (actualPhones > []) :
 	#Uncommenting connected and ready phones.
-	for x in range (0, len(actualPhones)) :
-		for y in range(0,len(wholeFile)) :
-			searchResult = re.search(actualPhones[x], wholeFile[y])
+	for index, phone in enumerate(actualPhones) :
+		for inner_index, currentString in enumerate(wholeFile) :
+			searchResult = re.search(phone, currentString)
 			if str(searchResult).lower() != "none" :	
 				for z in range (0,3) :
-					wholeFile[y] = "phone." + str(x+1) + wholeFile[y][8:]
-					y += 1
+					wholeFile[inner_index] = re.sub(r'^#+phone.\d+', 'phone.' + str(index+1), wholeFile[inner_index])
+					inner_index += 1
 else :
 	print "\nCheck if phones connected properly."
 
