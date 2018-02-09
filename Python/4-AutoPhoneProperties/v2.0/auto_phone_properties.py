@@ -42,11 +42,18 @@ actualPhones = []
 #Variable to store list of all connected, but not ready phones.
 errorPhones = []
 
+
 #Checking of given parameters for priority pointer and path.
 parser = argparse.ArgumentParser(description = "Runs 'adb devices' and updates TestApplicationPhone.properties file with actual phones status.")
 parser.add_argument("path", action='store', help = "Obligatory argument which should contain path to TestApplicationPhone.properties file")
 parser.add_argument ("-n", "--nexus", dest = "nexusPriority", action = 'store_true', help = "Optional argument to set NEXUS phone as prioritized")
 parser.add_argument ("-s", "--samsung", dest = "samsungPriority", action = 'store_true', help = "Optional argument to set SAMSUNG phone as prioritized")
+
+#Checking of given parameters for path and priority pointer.
+parser = argparse.ArgumentParser(description = "Runs 'adb devices' and updates TestApplicationPhone.properties file with actual phone status.")
+parser.add_argument("path", action="store", help = "Obligatory argument for setting path.")
+parser.add_argument ("-n", "--nexus", dest = "nexusPriority", action = 'store_true', help = "Sets priority for NEXUS phone.")
+parser.add_argument ("-s", "--samsung", dest = "samsungPriority", action = 'store_true', help = "Sets priority for SAMSUNG phone.")
 args = parser.parse_args()
 
 #Checking if path is valid and can be read
@@ -63,8 +70,13 @@ except IOError :
 
 #Running external command 'adb devices' and converting output to utf-8 string.
 print "\nRunning 'adb devices'...\n"
+<<<<<<< HEAD
 comResult = (subprocess.check_output(["adb devices"],shell=True)).decode("utf-8")
 #comResult = (subprocess.check_output(["python testInput.py"],shell=True)).decode("utf-8")
+=======
+#comResult = (subprocess.check_output(["adb devices"],shell=True)).decode("utf-8")
+comResult = (subprocess.check_output(["testInput.py"],shell=True)).decode("utf-8")
+>>>>>>> 8a10e18219886005801c0bdcba9089888cb4bc61
 
 #Splitting string to a list by elements.
 modifStr = re.sub(r'\s',',', comResult)
