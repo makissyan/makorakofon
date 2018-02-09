@@ -13,7 +13,7 @@ def listDisplay(header, listToDisplay) :
 		print "\t\t- {}".format(element)
 		if (index == len(listToDisplay) -1) :
 			print "\n"
-	
+
 #sortByPriority() - function for lists sorting by other list elements. Currently configured for shifting 1st found element to 1st place in list. 
 #Receives 3 parameters: List which should be sorted, list with elements which will be taken as sorting criteria, string with a phone name.
 def sortByPriority(fullReadyPhonesList, listToBeSortBy, phoneName) :
@@ -27,12 +27,25 @@ def sortByPriority(fullReadyPhonesList, listToBeSortBy, phoneName) :
 			print "{} phone couldn't be found in list of connected devices...\n".format(phoneName.upper())
 
 #List of all known phones.
-KNOWN_PHONES = ['CB5A27NUU4','10160ad8efee3403','0915f983de722d01','05445efb0a5cb40f','09a7ad48029a8b12','05535d970a5cab52','069a23bb344b6eaa',
-'02b6f328d0236113','079ec7be00d355d8','32045110369281ad','ce0716079de52a1702','11160be17a933201','W3D7N15616010803','4790c0ccaeaa10fe']
-#List of NEXUS phones.
-NEXUS_PHONES = ['05445efb0a5cb40f','09a7ad48029a8b12','05535d970a5cab52','069a23bb344b6eaa','02b6f328d0236113','079ec7be00d355d8']
-#List of SAMSUNG phones.
-SAMSUNG_PHONES = ['10160ad8efee3403','0915f983de722d01','32045110369281ad','11160be17a933201','4790c0ccaeaa10fe']
+#KNOWN_PHONES = ['CB5A27NUU4','10160ad8efee3403','0915f983de722d01','05445efb0a5cb40f','09a7ad48029a8b12','05535d970a5cab52','069a23bb344b6eaa',
+#'02b6f328d0236113','079ec7be00d355d8','32045110369281ad','ce0716079de52a1702','11160be17a933201','W3D7N15616010803','4790c0ccaeaa10fe']
+##List of NEXUS phones.
+#NEXUS_PHONES = ['05445efb0a5cb40f','09a7ad48029a8b12','05535d970a5cab52','069a23bb344b6eaa','02b6f328d0236113','079ec7be00d355d8']
+##List of SAMSUNG phones.
+#SAMSUNG_PHONES = ['10160ad8efee3403','0915f983de722d01','32045110369281ad','11160be17a933201','4790c0ccaeaa10fe']
+
+def getKnownPhonesWithParameters(fileName) :
+	knownPhonesWithParameters = ""
+	tmpOpenedFile = open(fileName, "r")
+	tmpStringsOfFile = tmpOpenedFile.readlines()
+	tmpOpenedFile.close()
+	for index, fileLine in enumerate (tmpStringsOfFile) :
+		isPhoneLine = re.match(r'[a-zA-Z]',fileLine)
+		if (str(isPhoneLine).lower() != "none") :
+			knownPhonesWithParameters += tmpStringsOfFile[index]
+	return knownPhonesWithParameters
+
+	
 
 #Regular expression which is used for searching "phone.*" string (uncommented phone).
 PHONES_SEARCH_EXPRESSION = re.compile("phone.\d")
@@ -64,7 +77,6 @@ except IOError :
 #Running external command 'adb devices' and converting output to utf-8 string.
 print "\nRunning 'adb devices'...\n"
 comResult = (subprocess.check_output(["adb devices"],shell=True)).decode("utf-8")
-#comResult = (subprocess.check_output(["python testInput.py"],shell=True)).decode("utf-8")
 
 #Splitting string to a list by elements.
 modifStr = re.sub(r'\s',',', comResult)
