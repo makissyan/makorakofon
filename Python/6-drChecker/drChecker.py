@@ -75,7 +75,7 @@ def check_extra_stacked_symbols(r_reel_stack, d_reel_stack):
             if not (r_reel_stack.__contains__(symbol)):
                 print("\t\t!!! WARNING !!! STACK OF "+symbol.__str__()+" IS EXTRA AS IT DOESN'T PRESENT ON REAL REEL!")
 
-
+# starts set of checks
 def check_display_reel(r_reel, d_reel):
     try:
         r_unique = get_unique(r_reel)
@@ -90,6 +90,7 @@ def check_display_reel(r_reel, d_reel):
         print("Oops... Something really went wrong...")
 
 
+# starts set of checks for each founded *.xml file
 def start_reels_check(reels_set, display_reels_set):
     for index, reel in enumerate(reels_set):
         print("Checking set: "+str(index))
