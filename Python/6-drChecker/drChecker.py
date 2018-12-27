@@ -1,4 +1,5 @@
 import os
+import sys
 
 import xml.etree.ElementTree as ET
 
@@ -25,7 +26,7 @@ def get_unique(symbols):
 # getting stacked symbols from reel
 def get_stacked(symbols):
     stacked_symbols = []
-    # Getting border symbols [[0], [n-3], [n-2], [n-1]
+    # Getting border symbols [[0], [n-3], [n-2], [n-1]]
     border_symbols = [symbols[symbols.__len__()-3],
                       symbols[symbols.__len__()-2],
                       symbols[symbols.__len__()-1],
@@ -102,10 +103,11 @@ def start_reels_check(reels_set, display_reels_set):
 # scanning of folder for *.xml files
 def get_xml_files():
     files = []
-    for file in os.listdir():
+
+    path = sys.argv[1]
+    for file in os.listdir(path):
         if file.endswith(".xml"):
-            files.append(file)
-    print("")
+            files.append(path+file)
     return files
 
 
@@ -127,6 +129,11 @@ def extract_from_xml(xml_file, reels_type):
     return all_reels
 
 
+reels_set_tag = 'reels_set'
+display_reels_set_tag = 'display_reels_set'
+#reels_set_tag = 'reels'
+#display_reels_set_tag = 'display_reels'
+
 reels_set = []
 display_reels_set = []
 
@@ -135,8 +142,8 @@ xml_files = get_xml_files()
 for xml_file in xml_files:
     print("Processing "+str(xml_file)+"...\n")
     #   reels_set = 'reels_set' or 'reels'
-    reels_set = extract_from_xml(xml_file, 'reels_set')
+    reels_set = extract_from_xml(xml_file, reels_set_tag)
     #   display_reels_set = 'display_reels_set' or 'display_reels'
-    display_reels_set = extract_from_xml(xml_file, 'display_reels_set')
+    display_reels_set = extract_from_xml(xml_file, display_reels_set_tag)
     start_reels_check(reels_set, display_reels_set)
     print("\n"+50*" * "+"\n")
