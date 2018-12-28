@@ -49,32 +49,38 @@ def get_stacked(symbols):
     return stacked_symbols
 
 
+# Function for printing an issue
+def throw_warning(symbol, issue_type):
+    print("\t\tWARNING - SYMBOL '{}' {}".format(symbol, issue_type))
+
+
 def check_unique_symbols(r_unique, d_unique):
     if not (r_unique == d_unique):
         for symbol in r_unique:
             if not (d_unique.__contains__(symbol)):
-                print("\t\t!!! WARNING !!! SYMBOL "+symbol.__str__()+" DOESN'T PRESENT ON DISPLAY REEL!")
+                throw_warning(symbol, "IS ABSENT ON A DISPLAY REEL")
 
 
 def check_extra_display_symbols(r_unique, d_unique):
     if not (r_unique == d_unique):
         for symbol in d_unique:
             if not (r_unique.__contains__(symbol)):
-                print("\t\t!!! WARNING !!! SYMBOL "+symbol.__str__()+" IS EXTRA AS IT DOESN'T PRESENT ON REAL REEL!")
+                throw_warning(symbol, "IS EXTRA AS IT DOESN'T PRESENT ON REAL REEL")
 
 
 def check_stacked_symbols(r_reel_stack, d_reel_stack):
     if not (r_reel_stack == d_reel_stack):
         for symbol in r_reel_stack:
             if not (d_reel_stack.__contains__(symbol)):
-                print("\t\t!!! WARNING !!! STACK OF "+symbol.__str__()+" DOESN'T PRESENT ON DISPLAY REEL!")
+                throw_warning(symbol, "DOESN'T STACKED ON A DISPLAY REEL")
 
 
 def check_extra_stacked_symbols(r_reel_stack, d_reel_stack):
     if not (r_reel_stack == d_reel_stack):
         for symbol in d_reel_stack:
             if not (r_reel_stack.__contains__(symbol)):
-                print("\t\t!!! WARNING !!! STACK OF "+symbol.__str__()+" IS EXTRA AS IT DOESN'T PRESENT ON REAL REEL!")
+                throw_warning(symbol, "HAS EXTRA STACK AS IT DOESN'T PRESENT ON REAL REEL")
+
 
 # starts set of checks
 def check_display_reel(r_reel, d_reel):
@@ -91,7 +97,7 @@ def check_display_reel(r_reel, d_reel):
         print("Oops... Something really went wrong...")
 
 
-# starts set of checks for each founded *.xml file
+# starts set of checks for each founded reel set
 def start_reels_check(reels_set, display_reels_set):
     for index, reel in enumerate(reels_set):
         print("Checking set: "+str(index))
@@ -100,6 +106,7 @@ def start_reels_check(reels_set, display_reels_set):
             check_display_reel(symbol_set, display_reels_set[index].symbols[symbol_set_index])
         print(50*"-")
 
+
 # scanning of folder for *.xml files
 def get_xml_files():
     files = []
@@ -107,6 +114,8 @@ def get_xml_files():
     path = sys.argv[1]
     for file in os.listdir(path):
         if file.endswith(".xml"):
+            if not (str(path).endswith("\\")):
+                path = path+"\\"
             files.append(path+file)
     return files
 
@@ -134,11 +143,13 @@ display_reels_set_tag = 'display_reels_set'
 #reels_set_tag = 'reels'
 #display_reels_set_tag = 'display_reels'
 
+# variables for storing sets of real and display reels
 reels_set = []
 display_reels_set = []
 
 xml_files = get_xml_files()
 
+# processing by each found xml-config
 for xml_file in xml_files:
     print("Processing "+str(xml_file)+"...\n")
     #   reels_set = 'reels_set' or 'reels'
