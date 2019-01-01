@@ -26,25 +26,20 @@ def get_unique(symbols):
 # getting stacked symbols from reel
 def get_stacked(symbols):
     stacked_symbols = []
-    # Getting border symbols [[0], [n-3], [n-2], [n-1]]
-    border_symbols = [symbols[symbols.__len__()-3],
-                      symbols[symbols.__len__()-2],
-                      symbols[symbols.__len__()-1],
-                      symbols[0]]
+
+    modified_symbols = symbols
+    # adding n[0] and n[1] elements to the end of list
+    for i in range(0, 2):
+        modified_symbols.append(symbols[i])
+
     # Checking if n[i], n[i+1], n[i+2] are the same symbols
-    for index, symbol in enumerate(symbols):
-        # Iterating till [n-3] element
-        if index < (symbols.__len__()-3):
-            if (symbol == symbols[index+1]) and (symbol == symbols[index+2]):
+    for index, symbol in enumerate(modified_symbols):
+        # Iterating till [n-2] element
+        if index < (modified_symbols.__len__()-2):
+            if (symbol == modified_symbols[index+1]) and (symbol == modified_symbols[index+2]):
                 if not (stacked_symbols.__contains__(symbol)):
                     stacked_symbols.append(symbol)
 
-# Checking border symbols for a possible symbols-stack
-    for symbol in border_symbols:
-        if (border_symbols.count(symbol)) > 2:
-            if not (stacked_symbols.__contains__(symbol)):
-                stacked_symbols.append(symbol)
-            break
     stacked_symbols.sort()
     return stacked_symbols
 
