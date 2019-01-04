@@ -123,13 +123,31 @@ def extract_from_xml(xml_file, reels_type):
     config = ET.parse(xml_file).getroot()
     #    <reels_set>
     reels_set = config.find(reels_type)
-    for set in reels_set:
+    if reels_set_tag == "reels_set":
+        for set in reels_set:
+            symbols = []
+            set_id = set.get("id")
+            for reel in set:
+                reel_symbols = reel.get('symbols')
+
+                # handler for situations <reel i="2" reel="1" type="copy"/>
+                if reel_symbols is None and reel.get('type') == 'copy':
+                    reel_symbols = symbols[int(reel.get('reel'))]
+                    symbols.append(reel_symbols)
+                    continue
+
+                symbols.append(list(map(int, reel.get('symbols').split(','))))
+                # print(reel.get("symbols"))
+            all_reels.append(Reel(set_id, symbols))
+
+    else:
         symbols = []
-        set_id = set.get("id")
-        for reel_symbols in set:
-            symbols.append(list(map(int, reel_symbols.get('symbols').split(','))))
-            # print(reel_symbols.get("symbols"))
+        set_id = 0
+        for reel in reels_set:
+            symbols.append(list(map(int, reel.get('symbols').split(','))))
+            # print(reel.get("symbols"))
         all_reels.append(Reel(set_id, symbols))
+
     return all_reels
 
 
@@ -142,6 +160,8 @@ display_reels_set_tag = 'display_reels_set'
 reels_set = []
 display_reels_set = []
 
+
+# variable for storing list of found xml files
 xml_files = get_xml_files()
 
 # processing by each found xml-config
