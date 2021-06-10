@@ -1,8 +1,9 @@
 HISTORY_FILE = "currency_history.txt"
+RAW_JSON_RESPONSES = "raw_responses.txt"
 
 
-def update_currency_history_file(stringed_info):
-    with open(HISTORY_FILE, "a+") as file:
+def update_file(stringed_info, file_to_update):
+    with open(file_to_update, "a+") as file:
         file.seek(0)
         if stringed_info not in file.read():
             file.seek(0)

@@ -19,10 +19,10 @@ def get_currency_rate():
         return "Unable to get currency rate"
 
 
-def prepare_currencies_list():
+def prepare_currencies_list(raw_json):
     currencies_to_get = ['USD', 'EUR']
     currencies_list = []
-    raw_json = json.loads(get_currency_rate())
+    raw_json = json.loads(raw_json)
 
     for currency in currencies_to_get:
         currencies_list.append(process_currency(raw_json, currency))
